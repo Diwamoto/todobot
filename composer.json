@@ -1,0 +1,13 @@
+{
+    "name": "daiki/todobot",
+    "description": "discord todo bot written by php",
+    "authors": [
+        {
+            "name": "岩本大樹",
+            "email": "daiki.work.0118@gmail.com"
+        }
+    ],
+    "require": {
+        "team-reflex/discord-php": "^4.0"
+    }
+}
