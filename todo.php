@@ -10,7 +10,9 @@ class Todo {
 	 * {
 	 *
 	 * '0' => {
+	 * 		'serverid'  => '',
 	 * 		'name' 		=> '',
+	 * 		'assign'	=> '',
 	 * 		'data' 		=> '',
 	 * 		'created' 	=> '',
 	 * 		'modified' 	=> ''
@@ -33,10 +35,12 @@ class Todo {
 
 	public function getDefaultValue(){
 		return [
+			'serverid' => '',
 			'name' => '',
+			'assign' => '',
 			'data' => '',
-			'created' => date('Y/m/d H:i:s'),
-			'modified' => date('Y/m/d H:i:s')
+			'created' => date('Y:m:d H:i:s'),
+			'modified' => date('Y:m:d H:i:s')
 		];
 	}
 
@@ -52,7 +56,7 @@ class Todo {
 	}
 
 	public function write(){
-		file_put_contents($this->filename , json_encode($this->todos));
+		file_put_contents($this->filename , json_encode($this->todos, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 		$this->reload;
 	}
 
@@ -60,7 +64,7 @@ class Todo {
 		$this->todos = [];
 	}
 
-	public function add($id, $data, $option = []){
+	public function add($data, $option = []){
 		$_data = $this->getDefaultValue();
 		if(isset($option)){
 			$flg = true;
@@ -81,18 +85,32 @@ class Todo {
 		$result = [];
 		if($option && $option['conditions']){
 			$conditions = $option['conditions'];
-			foreach($conditions as $key => $condition){
-				foreach($this->todos as $todo){
-					if($todo[$key] === $condition){
-						$result[] = $todo[$key];
+			foreach($conditions as $ckey => $condition){
+				foreach($this->todos as $tkey => $todo){
+					if($ckey == 'id' && $this->todos[$condition]){//id検索
+						$result[] = $this->todos[$condition];
+						break;
+					}
+					if($todo[$ckey] === $condition){//その他の検索
+						
+						$result[] = $todo[$ckey];
 						if($mode === 'first'){
 							break;
 						}
 					}
 				}
 			}
+
+			return $result;
+
+		}else{
+
+			if($mode === 'first'){
+				return $this->todo[0];
+			}else if($mode === 'all'){
+				return $this->todos;
+			}
 		}
-		return $result;
 	}
 
 	public function update($id, $data, $option = []){
