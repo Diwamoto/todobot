@@ -64,9 +64,9 @@ $discord->on('ready', function ($discord) {
 					}
 					$msg = '```';
 					foreach($todos as $key => $todo){
-						$msg = $msg . 'id:' . $key . '  ' .  $todo['assign'] . ':"' . $todo['data'] . '"  made by ' . $todo['name'] . PHP_EOL;
+						$msg = $msg . $key . '  ' .  $todo['assign'] . ':"' . $todo['data'] . '"  made by ' . $todo['name'] . PHP_EOL;
 					}
-					$msg = '```';
+					$msg = $msg . '```';
 					if($command == 'all' || $command == 'list'){
 						$message->reply(PHP_EOL . 'todo一覧' . PHP_EOL . $msg);
 					}else{
@@ -102,12 +102,14 @@ $discord->on('ready', function ($discord) {
 				case 'help':
 				case 'h':
 					$message->reply(PHP_EOL .'コマンド一覧'.PHP_EOL.PHP_EOL.
+					'```'. PHP_EOL . 
 					'//todo add {todo} ({name}):	(userの)todoを追加します。'.PHP_EOL.
 					'//todo all:					todoを全取得します。'.PHP_EOL.
 					'//todo find {id,name}:			todoを検索します。'.PHP_EOL.
 					'//todo remove {id}:			todoを削除します。'.PHP_EOL.
 					'//todo destory:				todoを全削除します。管理者権限が必要です。'.PHP_EOL.
-					'//todo help:					ヘルプです。'.PHP_EOL);
+					'//todo help:					ヘルプです。'.PHP_EOL.
+					'```');
 				break;
 			}
 		}

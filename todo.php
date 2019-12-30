@@ -69,6 +69,7 @@ class Todo {
 
 	public function reset(){
 		$this->todos = [];
+		$this->write();
 	}
 
 	public function add($data, $option = []){
@@ -76,6 +77,7 @@ class Todo {
 		if(isset($option)){
 			$flg = true;
 			$_data['name'] = $option['user']['name'];
+			$_data['assign'] = $option['user']['assign'];
 		}
 		$_data['data'] = $data;
 		$this->todos[] = $_data;
@@ -100,7 +102,7 @@ class Todo {
 					}
 					if($todo[$ckey] === $condition){//その他の検索
 						
-						$result[] = $todo[$ckey];
+						$result[] = $todo;
 						if($mode === 'first'){
 							break;
 						}
