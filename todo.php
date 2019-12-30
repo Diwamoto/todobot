@@ -5,6 +5,8 @@ class Todo {
 	private $filename = 'todos.json';
 	private $todos = [];
 
+	public $config;
+
 	/**
 	 * json構造
 	 * {
@@ -25,6 +27,11 @@ class Todo {
 
 
 	public function __construct(){
+
+		$this->config = [
+			'help' => false,
+			'admin' => 333924812386861063,
+		];
 
 		if(file_exists($this->filename)){
 			$json = file_get_contents($this->filename);

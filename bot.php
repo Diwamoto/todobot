@@ -3,11 +3,9 @@
 include __DIR__.'/vendor/autoload.php';
 include __DIR__.'/todo.php';
 include __DIR__.'/util.php';
-include __DIR__.'/setting.php';
-
 
 $discord = new \Discord\Discord([
-	'token' => $config['token'],
+	'token' => 'NjYwODUxNjA1MzczMTkwMTc1.Xgi4ZQ.X_l9cvBTPjVjyJpp4WlMaYKNk7U',
 ]);
 
 $discord->on('ready', function ($discord) {
@@ -15,6 +13,7 @@ $discord->on('ready', function ($discord) {
 
 	// Listen for events here
 	$discord->on('message', function ($message) {
+		//$discord->channel->sendMessage('aaa');
 		$Todo = new Todo();
 		$content = $message->content;
 		if(mb_substr($content,0,6) === '//todo'){
@@ -75,11 +74,8 @@ $discord->on('ready', function ($discord) {
 					}
 				break;
 				case 'destroy':
-					if($message->author->id === $config['admin']){//管理者のtokenからきたdiscordIDを入れると管理者のみ削除できるようになります。
-						echo 'clear';
-						$Todo->reset();
-						$message->reply('todoを全削除しました。');
-					}
+					$Todo->reset();
+					$message->reply('todoを全削除しました。');
 				break;
 				default:
 					if($config['default']){
