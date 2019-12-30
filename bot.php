@@ -5,7 +5,7 @@ include __DIR__.'/todo.php';
 include __DIR__.'/util.php';
 
 $discord = new \Discord\Discord([
-	'token' => 'NjYwODUxNjA1MzczMTkwMTc1.Xgi4ZQ.X_l9cvBTPjVjyJpp4WlMaYKNk7U',
+	'token' => '',
 ]);
 
 $discord->on('ready', function ($discord) {
@@ -23,42 +23,51 @@ $discord->on('ready', function ($discord) {
 			array_shift($args);
 			switch($command){
 				case 'add':
-					$data = implode(' ',$args);
+					$data = $args[0];
 					$option = [
 						'save' => true,//ファイルに書き出すかどうか
 						'user' => [
 							'name' => $message->author->username//作成者
 						]
 					];
-					if(empty($args[1])){//担当
-						$option['user']['assign'] = $message->author->username;
-					}else{
+					if(!empty($args[1])){//担当
 						$option['user']['assign'] = $args[1];
+					}else{
+						$option['user']['assign'] = $message->author->username;
 					}
 					$Todo->add($data,$option);
 					$message->reply('todoを保存しました。');
 					//メッセージ送信
 				break;
+				case 'list':
 				case 'all':
 				case 'find':
-					if($command == 'all'){
+					if($command == 'all' || $command == 'list'){
 						$todos = $Todo->find('all');
 					}else{
-						$todos = $Todo->find('all',[
-							'conditions' => [
+						if(is_int($args[0])){
+							$conditions = [
 								'id' => $args[0],
-							],
+							];
+						}else{
+							$conditions = [
+								'assign' => $args[0],
+							];
+						}
+						$todos = $Todo->find('all',[
+							'conditions' => $conditions,
 						]);
 					}
 					if(empty($todos)){
 						$message->reply('todoが存在しません！');
 						break;
 					}
-					$msg = '';
+					$msg = '```';
 					foreach($todos as $key => $todo){
-						$msg = $msg . 'id:' . $key . '  ' .  $todo['assign'] . 'のtodo: "' . $todo['data'] . '"  made by ' . $todo['name'] . PHP_EOL;
+						$msg = $msg . 'id:' . $key . '  ' .  $todo['assign'] . ':"' . $todo['data'] . '"  made by ' . $todo['name'] . PHP_EOL;
 					}
-					if($command == 'all'){
+					$msg = '```';
+					if($command == 'all' || $command == 'list'){
 						$message->reply(PHP_EOL . 'todo一覧' . PHP_EOL . $msg);
 					}else{
 						$message->reply(PHP_EOL . '検索結果' . PHP_EOL . $msg);
@@ -70,7 +79,7 @@ $discord->on('ready', function ($discord) {
 					if($command == 'ok'){
 						$message->reply('いい仕事しましたね！');
 					}else{
-						$message->reply($args[0] . 'のtodoを全削除しました。');
+						$message->reply($args[0] . 'のtodoを削除しました。');
 					}
 				break;
 				case 'destroy':
