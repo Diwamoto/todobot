@@ -53,6 +53,7 @@ $discord->on('ready', function ($discord) {
 					}
 					if(empty($todos)){
 						$message->reply('todoが存在しません！');
+						break;
 					}
 					$msg = '';
 					foreach($todos as $key => $todo){
