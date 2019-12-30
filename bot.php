@@ -31,7 +31,7 @@ $discord->on('ready', function ($discord) {
 							'name' => $message->author->username//作成者
 						]
 					];
-					if(!$args[1]){//担当
+					if(empty($args[1])){//担当
 						$option['user']['assign'] = $message->author->username;
 					}else{
 						$option['user']['assign'] = $args[1];

@@ -57,7 +57,7 @@ class Todo {
 
 	public function write(){
 		file_put_contents($this->filename , json_encode($this->todos, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-		$this->reload;
+		$this->reload();
 	}
 
 	public function reset(){
